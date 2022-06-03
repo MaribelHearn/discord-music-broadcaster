@@ -6,4 +6,5 @@ Before running, open the script and modify its settings to your liking.
 A client_id is required for it to run.
 
 **How it looks, customized:**
+
 ![screenshot](screenshot.png)
