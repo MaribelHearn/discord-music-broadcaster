@@ -12,12 +12,6 @@ from pypresence import Presence
 # The ID for your application.
 app_id = ""
 
-# names of the images you used for your application.
-large_image_paused  = ""
-large_image_playing = ""
-small_image_paused  = ""
-small_image_playing = ""
-
 # various customizable text.
 # available variables are {title} {artist} and {album}
 top_text = "🎶 {title} 🎶"
@@ -25,18 +19,25 @@ bottom_text = "💜 by {artist} 💜"
 
 large_image_playing_text = "🎵 on {album} 🎵"
 large_image_paused_text =  "🎵 on {album} 🎵"
-
 small_image_playing_text = "playing!"
 small_image_paused_text =  "paused!"
 
+# names of the images you used for your application.
+# (can be empty if you don't want to use them.)
+large_image_paused  = ""
+large_image_playing = ""
+small_image_paused  = ""
+small_image_playing = ""
+
 # The amount of time waited before your music stops being broadcasted after being paused.
+# Set to 0 to disable.
 pause_timeout = 120
 
 # Set this to True if you'd prefer to display the albumartist instead of the artist on a track when possible.
 # (if only the artist or only the albumartist is available for a track it will use what its got regardless of this setting.)
 prefer_album_artist = True
 
-# List of allowed music players.
+# List of allowed music players, add your preferred player here.
 # Spotify is disabled by default because Discord
 # already features Spotify integration.
 whitelist = [
