@@ -10,24 +10,24 @@ from pypresence import Presence
 # --------------------
 
 # The ID for your application.
-app_id = ""
+app_id = "924585745694490664"
 
 # various customizable text.
 # available variables are {title} {artist} and {album}
 top_text = "🎶 {title} 🎶"
 bottom_text = "💜 by {artist} 💜"
 
-large_image_playing_text = "🎵 on {album} 🎵"
-large_image_paused_text =  "🎵 on {album} 🎵"
-small_image_playing_text = "playing!"
-small_image_paused_text =  "paused!"
+large_image_playing_text = "🎵 eating {album} 🎵"
+large_image_paused_text =  "🎵 (not) eating {album} 🎵"
+small_image_playing_text = "playiiing!"
+small_image_paused_text =  "PAUSED!!!"
 
 # names of the images you used for your application.
 # (can be empty if you don't want to use them.)
-large_image_paused  = ""
-large_image_playing = ""
-small_image_paused  = ""
-small_image_playing = ""
+large_image_paused  = "nom"
+large_image_playing = "nom"
+small_image_paused  = "pause"
+small_image_playing = "playyy"
 
 # The amount of time waited before your music stops being broadcasted after being paused.
 # Set to 0 to disable.
@@ -100,7 +100,7 @@ bus = dbus.SessionBus(mainloop=dbus_loop)
 presence = Presence(app_id)
 presence.connect()
 
-time_passed = 0
+time_passed = pause_timeout
 
 while True:
     pids = list(pympris.available_players())
