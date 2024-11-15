@@ -2,6 +2,7 @@ import pympris
 import gobject
 import time
 import dbus
+import configparser
 
 from dbus.mainloop.glib import DBusGMainLoop
 from pypresence import Presence
@@ -9,29 +10,33 @@ from pypresence import Presence
 # Settings
 # --------------------
 
-# The ID for your application.
-app_id = "924585745694490664"
+# read your application ID from config.
+configParser = configparser.RawConfigParser()   
+configFilePath = r'config.ini'
+configParser.read(configFilePath)
+config = dict(configParser.items('config'))
+app_id = config["app_id"]
 
 # various customizable text.
 # available variables are {title} {artist} and {album}
-top_text = "🎶 {title} 🎶"
-bottom_text = "💜 by {artist} 💜"
+top_text = "{title}"
+bottom_text = "{artist}"
 
-large_image_playing_text = "🎵 eating {album} 🎵"
-large_image_paused_text =  "🎵 (not) eating {album} 🎵"
-small_image_playing_text = "playiiing!"
-small_image_paused_text =  "PAUSED!!!"
+large_image_playing_text = "{album}"
+large_image_paused_text =  "{album}"
+small_image_playing_text = ""
+small_image_paused_text =  ""
 
 # names of the images you used for your application.
 # (can be empty if you don't want to use them.)
-large_image_paused  = "nom"
-large_image_playing = "nom"
+large_image_paused  = "strawberry"
+large_image_playing = "strawberry"
 small_image_paused  = "pause"
-small_image_playing = "playyy"
+small_image_playing = "play"
 
 # The amount of time waited before your music stops being broadcasted after being paused.
 # Set to 0 to disable.
-pause_timeout = 120
+pause_timeout = 300
 
 # Set this to True if you'd prefer to display the albumartist instead of the artist on a track when possible.
 # (if only the artist or only the albumartist is available for a track it will use what its got regardless of this setting.)
@@ -45,6 +50,7 @@ whitelist = [
         "Quod Libet",
         "Clementine",
     #   "Spotify",
+        "Strawberry",
 ]
 
 # --------------------
@@ -74,7 +80,6 @@ class Song:
 # in:  a MediaPlayer
 # out: the current Song
 def get_song(mp):
-
     song = Song()
     md = mp.player.Metadata
     if not md: return song
@@ -101,6 +106,7 @@ presence = Presence(app_id)
 presence.connect()
 
 time_passed = pause_timeout
+started_playing = True
 
 while True:
     pids = list(pympris.available_players())
@@ -110,7 +116,14 @@ while True:
 
     if mps:
         song = get_song(mps[0]) # 0th mp is most likely to be active.
-        if song.playing: time_passed = 0
+        if started_playing:
+            start_time = time.time()
+
+        if song.playing:
+            time_passed = 0
+            started_playing = False
+        else:
+            started_playing = True
 
         lt = large_image_playing_text if song.playing else large_image_paused_text
         st = small_image_playing_text if song.playing else small_image_paused_text
@@ -119,9 +132,11 @@ while True:
             presence.update(
                 details = top_text.format(artist=song.artist, title=song.title, album=song.album) if top_text else top_text,
                 state = bottom_text.format(artist=song.artist, title=song.title, album=song.album) if bottom_text else bottom_text,
-                end = time.time() + (song.length - song.position) if song.playing else None,
+                start = start_time if song.playing else None,
+                end = start_time + song.position if song.playing else None,
 
-                large_image = large_image_playing if song.playing else large_image_paused,
+                #large_image = large_image_playing if song.playing else large_image_paused,
+                large_image = song.album.lower().replace(".","").replace(" ","_").replace("&","and"),
                 small_image = small_image_playing if song.playing else small_image_paused,
                 large_text = lt.format(artist=song.artist, title=song.title, album=song.album) if lt else lt,
                 small_text = st.format(artist=song.artist, title=song.title, album=song.album) if st else st,
