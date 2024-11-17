@@ -136,7 +136,7 @@ while True:
                 end = start_time + song.position if song.playing else None,
 
                 #large_image = large_image_playing if song.playing else large_image_paused,
-                large_image = song.album.lower().replace(".","").replace(" ","_").replace("&","and"),
+                large_image = song.album.lower().replace(".","").replace(":","").replace(" ","_").replace("&","and"),
                 small_image = small_image_playing if song.playing else small_image_paused,
                 large_text = lt.format(artist=song.artist, title=song.title, album=song.album) if lt else lt,
                 small_text = st.format(artist=song.artist, title=song.title, album=song.album) if st else st,
